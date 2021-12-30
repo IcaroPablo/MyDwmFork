@@ -285,7 +285,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 static Atom wmatom[WMLast], netatom[NetLast];
 static int running = 1;
 static Cur *cursor[CurLast];
-static Clr **scheme;
+static Clr **scheme, clrborder;
 static Display *dpy;
 static Drw *drw;
 static Monitor *mons, *selmon;
@@ -733,10 +733,19 @@ void
 drawbar(Monitor *m)
 {
 	int x, w, tw = 0;
+	
+	int y = borderpx;
+	int th = bh - borderpx * 2;
+	int mw = m->ww - borderpx * 2;
+	
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
 	Client *c;
+
+	XSetForeground(drw->dpy, drw->gc, clrborder.pixel);
+	XFillRectangle(drw->dpy, drw->drawable, drw->gc, 0, 0, m->ww, bh);
+//	XFillRectangle(drw->dpy, drw->drawable, drw->gc, 0, 0, lbw+borderpx, bh);
 
 	/* draw status first so it can be overdrawn by tags later */
 	/* if (m == selmon) { // status is only drawn on selected monitor
@@ -751,7 +760,7 @@ drawbar(Monitor *m)
 			urg |= c->tags;
 	}
 
-	x = 0;
+	x = borderpx; // 0
 	for (i = 0; i < LENGTH(tags); i++) {
 		/* do not draw vacant tags */
 		if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
@@ -759,13 +768,15 @@ drawbar(Monitor *m)
 
 		w = TEXTW(tags[i]);
 		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
+		//drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
+		drw_text(drw, x, y, w, th, lrpad / 2, tags[i], urg & 1 << i);
 		x += w;
 	}
 
 	w = blw = TEXTW(m->ltsymbol);
 	drw_setscheme(drw, scheme[SchemeNorm]);
-	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+	//x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+    x =	drw_text(drw, x, y, w, th, lrpad / 2, m->ltsymbol, 0);
 	lbw = x;
 
 	/* if ((w = m->ww - tw - x) > bh) {
@@ -780,12 +791,14 @@ drawbar(Monitor *m)
 		}
 	} */
 
-	drw_map(drw, m->barwin, 0, 0, m->ww, bh);
+//	drw_map(drw, m->barwin, 0, 0, m->ww, bh);
+	drw_map(drw, m->barwin, 0, 0, lbw + borderpx, bh);
 
 	// if (m == selmon) { /* extra status is only drawn on selected monitor */
 	drw_setscheme(drw, scheme[SchemeNorm]);
 	/* clear default bar draw buffer by drawing a blank rectangle */
-	drw_rect(drw, 0, 0, m->ww, bh, 1, 1);
+	//drw_rect(drw, 0, 0, m->ww, bh, 1, 1);
+//	drw_rect(drw, x, y, w, th, 1, 1);
 
 	/*if (extrabarright) {
 		sw = TEXTW(stext) - lrpad + 2; /* 2px right padding *
@@ -793,22 +806,23 @@ drawbar(Monitor *m)
 		drw_text(drw, m->ww - sw, 0, sw, bh, 0, stext, 0);
 	} else {
 		drw_text(drw, 0, 0, mons->ww, bh, 0, stext, 0);
-	}*/
+	}*/	
 	
 	//sw = TEXTW(stext) - lrpad + 2; /* 10px right padding */
 	rbw = TEXTW(stext);
-	drw_text(drw, 2, 0, rbw, bh, 0, stext, 0);
+//	drw_text(drw, 2, 0, rbw, bh, 0, stext, 0);
+	drw_text(drw, borderpx, y, rbw - borderpx, th, 0, stext, 0);
 	// sw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
 	// rbw = TEXTW(stext);
 	// drw_text(drw, m->ww - sw, 0, sw, bh, 0, stext, 0);
 		
 		
-	drw_map(drw, m->extrabarwin, 0, 0, rbw, bh);
+	drw_map(drw, m->extrabarwin, 0, 0, rbw + borderpx, bh);
 	// }
 
         /* updating bars */
-	XMoveResizeWindow(dpy, selmon->barwin, selmon->wx + sp, selmon->by + vp, lbw, bh);
-	XMoveResizeWindow(dpy, selmon->extrabarwin, selmon->ww - rbw - sp, selmon->by + vp, rbw, bh);
+	XMoveResizeWindow(dpy, selmon->barwin, selmon->wx + sp, selmon->by + vp, lbw + borderpx, bh);
+	XMoveResizeWindow(dpy, selmon->extrabarwin, selmon->ww - rbw - sp - borderpx, selmon->by + vp, rbw + borderpx, bh);
 }
 
 void
@@ -1726,7 +1740,7 @@ setup(void)
 	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
 		die("no fonts could be loaded.");
 	lrpad = drw->fonts->h;
-	bh = drw->fonts->h + 2;
+	bh = drw->fonts->h + 2 + borderpx * 2;
 	updategeom();
 	sp = sidepad;
 	vp = (topbar == 1) ? vertpad : - vertpad;
@@ -1754,6 +1768,7 @@ setup(void)
 	scheme = ecalloc(LENGTH(colors), sizeof(Clr *));
 	for (i = 0; i < LENGTH(colors); i++)
 		scheme[i] = drw_scm_create(drw, colors[i], 3);
+	drw_clr_create(drw, &clrborder, col_borderbar);
 	/* init bars */
 	updatebars();
 	updatestatus();
