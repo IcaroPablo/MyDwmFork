@@ -207,9 +207,9 @@ static Key keys[] = {
 	//{ 0, XF86XK_AudioLowerVolume,	spawn,		SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)") },
 	
 
-	{ 0, XF86XK_AudioMute,          spawn,          SHCMD("amixer -D pulse sset Master toggle") },
-	{ 0, XF86XK_AudioLowerVolume,   spawn,          SHCMD("amixer -D pulse sset Master 5%-") },
-	{ 0, XF86XK_AudioRaiseVolume,   spawn,          SHCMD("amixer -D pulse sset Master 5%+") },
+	{ 0, XF86XK_AudioMute,          spawn,          SHCMD("amixer -D pulse sset Master toggle && kill -30 $(cat $HOME/.cache/barpid)") },
+	{ 0, XF86XK_AudioLowerVolume,   spawn,          SHCMD("amixer -D pulse sset Master 5%- && kill -30 $(cat $HOME/.cache/barpid)") },
+	{ 0, XF86XK_AudioRaiseVolume,   spawn,          SHCMD("amixer -D pulse sset Master 5%+ && kill -30 $(cat $HOME/.cache/barpid)") },
 	
 	{ MODKEY,                       XF86XK_AudioMute,          spawn,          SHCMD("~/.scripts/sp plau") },
 	//{ MODKEY|ShiftMask,             XF86XK_AudioMute,          spawn,          SHCMD("~/.scripts/sp play") },
@@ -245,8 +245,8 @@ static Key keys[] = {
 //	{ 0, XF86XK_TouchpadToggle,	spawn,		SHCMD("(synclient | grep 'TouchpadOff.*1' && synclient TouchpadOff=0) || synclient TouchpadOff=1") },
 //	{ 0, XF86XK_TouchpadOff,	spawn,		SHCMD("synclient TouchpadOff=1") },
 //	{ 0, XF86XK_TouchpadOn,		spawn,		SHCMD("synclient TouchpadOff=0") },
-	{ 0, XF86XK_MonBrightnessUp,	spawn,		SHCMD("xbacklight -inc 10") },
-	{ 0, XF86XK_MonBrightnessDown,	spawn,		SHCMD("xbacklight -dec 10") },
+	{ 0, XF86XK_MonBrightnessUp,	spawn,		SHCMD("xbacklight -inc 10 && kill -30 $(cat $HOME/.cache/barpid)") },
+	{ 0, XF86XK_MonBrightnessDown,	spawn,		SHCMD("xbacklight -dec 10 && kill -30 $(cat $HOME/.cache/barpid)") },
 
 	/* { MODKEY|Mod4Mask,              XK_h,      incrgaps,       {.i = +1 } }, */
 	/* { MODKEY|Mod4Mask,              XK_l,      incrgaps,       {.i = -1 } }, */
