@@ -3,7 +3,7 @@ My fork of the Dynamic Window Manager by suckless.org
 
 [bar border patch](https://codemadness.org/paste/dwm-border-bar.patch)
 
-To be (possibly) implemented:
+To be (possibly) implemented: <br>
 https://dwm.suckless.org/patches/zoomswap/ <br>
 https://dwm.suckless.org/patches/reorganizetags/ <br>
 https://dwm.suckless.org/patches/rmaster/ <br>
