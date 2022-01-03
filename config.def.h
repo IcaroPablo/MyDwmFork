@@ -195,8 +195,8 @@ static Key keys[] = {
 
 	{ MODKEY,            		XK_Escape,      spawn,		SHCMD("slock & xset dpms force off; mpc pause; pauseallmpv") },
 	//{ 0,				XK_Print,	spawn,		SHCMD("maim pic-full-$(date '+%y%m%d-%H%M-%S').png") },
-	{ 0,                            XK_Print,       spawn,          SHCMD("gscreenshot -c -s") },
-//	{ ShiftMask,			XK_Print,	spawn,		SHCMD("maimpick") },
+	{ 0,                            XK_Print,       spawn,          SHCMD("scrot -f -s -q 100 -e 'xclip -selection clipboard -target image/png -i $f && rm $f'") },
+	{ MODKEY,						XK_Print,		spawn,			SHCMD("scrot -f -q 100 -e 'xclip -selection clipboard -target image/png -i $f && rm $f'") },
 //	{ MODKEY,			XK_Print,	spawn,		SHCMD("dmenurecord") },
 //	{ MODKEY|ShiftMask,		XK_Print,	spawn,		SHCMD("dmenurecord kill") },
 //	{ MODKEY,			XK_Delete,	spawn,		SHCMD("dmenurecord kill") },
