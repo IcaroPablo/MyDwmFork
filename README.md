@@ -33,6 +33,9 @@ https://dwm.suckless.org/patches/flextile/ <br>
 https://dwm.suckless.org/patches/focusmaster/ <br>
 https://dwm.suckless.org/patches/tagall/ <br>
 https://dwm.suckless.org/patches/tagintostack/ <br>
+https://dwm.suckless.org/patches/holdbar/ <br>
+https://dwm.suckless.org/patches/movestack/ <br>
+https://dwm.suckless.org/patches/push/ <br>
 
 - applications must start at a predefined tag ([this patch](https://dwm.suckless.org/patches/default_tag_apps/) may be helpful)
 - (both) statuses bars must be drawn only on selected monitor ([this patch](https://dwm.suckless.org/patches/statusallmons/) may be helpful
