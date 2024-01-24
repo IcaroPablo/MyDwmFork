@@ -19,12 +19,12 @@ static const int vertpad            = 10;       /* vertical padding of bar */
 static const int sidepad            = 10;       /* horizontal padding of bar */
 static const char *fonts[]          = {"CozetteVector:pixelsize=12:antialias=true:autohint=true"};  // "monospace:size=10";
 static const char dmenufont[]       = "CozetteVector:pixelsize=12:antialias=true:autohint=true";  // "monospace:size=10"};
-static const char col_gray1[]       = "#000000"; // bar background
-static const char col_gray2[]       = "#444444"; // border norm
+static const char col_gray1[]       = "#1d2021"; // bar background
+static const char col_gray2[]       = "#1d2021"; // border norm
 static const char col_gray3[]       = "#bbbbbb"; // text norm color
-static const char col_gray4[]       = "#bbbbbb"; // text sel color
-static const char col_cyan[]        = "#005577"; // border sel
-static const char col_borderbar[]   = "#005577"; // bar border
+static const char col_gray4[]       = "#dddddd"; // text sel color
+static const char col_cyan[]        = "#bf5700"; // border sel
+static const char col_borderbar[]   = "#bf5700"; // bar border
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -70,8 +70,10 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", "-e", "dvtm", NULL };
+/* static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL }; */
+static const char *dmenucmd[] = { "j4-dmenu-desktop", NULL };
+//static const char *termcmd[]  = { "st", "-e", "dvtm", NULL };
+static const char *termcmd[]  = { "st", NULL };
 
 #include <X11/XF86keysym.h>
 
@@ -100,6 +102,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Tab,						view,           	{0} },
 	{ MODKEY|ShiftMask,             XK_q,						quit,           	{0} },
 	{ MODKEY,			            XK_w,						killclient,	    	{0} },
+    { MODKEY,                       XK_e,						spawn,           	SHCMD(TERMINAL " -e $HOME/.local/scripts/quick_edit nvim") },
 	{ MODKEY,			            XK_r,						spawn,		    	SHCMD(TERMINAL " -e ranger") },
     { MODKEY|ShiftMask,		        XK_r,						spawn,		    	SHCMD(TERMINAL " -e htop") },
 	{ MODKEY,                       XK_t,						setlayout,      	{.v = &layouts[0]} },
@@ -182,16 +185,16 @@ static Key keys[] = {
 	//{ MODKEY,						XK_Insert,					spawn,				SHCMD("") },
 
 	{ MODKEY,            			XK_Escape,					spawn,				SHCMD("slock & xset dpms force off; mpc pause; pauseallmpv") },
-	{ 0,                            XK_Print,					spawn,          	SHCMD("scrot -f -s -q 100 -e 'xclip -selection clipboard -target image/png -i $f && rm $f'") },
-	{ MODKEY,						XK_Print,					spawn,				SHCMD("scrot -f -q 100 -e 'xclip -selection clipboard -target image/png -i $f && rm $f'") },
+	{ MODKEY,                       XK_s,   					spawn,          	SHCMD("scrot -f -s -q 100 -e 'xclip -selection clipboard -target image/png -i $f && rm $f'") },
+	{ MODKEY|ShiftMask,				XK_s,					    spawn,				SHCMD("scrot -f -q 100 -e 'xclip -selection clipboard -target image/png -i $f && rm $f'") },
 	//{ MODKEY,						XK_Print,					spawn,				SHCMD("dmenurecord") },
 	//{ MODKEY|ShiftMask,			XK_Print,					spawn,				SHCMD("dmenurecord kill") },
 	//{ MODKEY,						XK_Delete,					spawn,				SHCMD("dmenurecord kill") },
 	//{ MODKEY,						XK_Scroll_Lock,				spawn,				SHCMD("killall screenkey || screenkey &") },	
 
-	{ 0, 							XF86XK_AudioMute,			spawn,      	    SHCMD("amixer -D pulse sset Master toggle && kill -30 $(cat $HOME/.cache/barpid)") },
-	{ 0, 							XF86XK_AudioLowerVolume,	spawn,         		SHCMD("amixer -D pulse sset Master 5%- && kill -30 $(cat $HOME/.cache/barpid)") },
-	{ 0, 							XF86XK_AudioRaiseVolume,	spawn,          	SHCMD("amixer -D pulse sset Master 5%+ && kill -30 $(cat $HOME/.cache/barpid)") },
+	{ MODKEY, 						XK_z,           			spawn,      	    SHCMD("amixer -D pulse sset Master toggle && kill -30 $(cat $HOME/.cache/barpid)") },
+	{ MODKEY, 						XK_x,                       spawn,         		SHCMD("amixer -D pulse sset Master 5%- && kill -30 $(cat $HOME/.cache/barpid)") },
+	{ MODKEY, 						XK_c,                       spawn,          	SHCMD("amixer -D pulse sset Master 5%+ && kill -30 $(cat $HOME/.cache/barpid)") },
 	
 	{ MODKEY, 						XF86XK_AudioMute,			spawn,          	SHCMD("~/.scripts/sp play") },
 	{ MODKEY, 						XF86XK_AudioLowerVolume,	spawn,          	SHCMD("~/.scripts/sp prev") },
